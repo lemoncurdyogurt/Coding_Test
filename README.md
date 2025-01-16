@@ -54,6 +54,6 @@
 
 # 🔗Reference Site
 
-스터디 주제 참고 https://github.com/Stendhalsynd/baekjoon-algorithm-study?tab=readme-ov-file
+[스터디 주제 참고](https://github.com/Stendhalsynd/baekjoon-algorithm-study?tab=readme-ov-file)
 
-스터디 노션 [백준 알고리즘 스터디](https://www.notion.so/173bf797596f8083840dd9d7280ce6ec?pvs=21)
+[스터디 기록용 노션](https://www.notion.so/173bf797596f8083840dd9d7280ce6ec?pvs=21)
