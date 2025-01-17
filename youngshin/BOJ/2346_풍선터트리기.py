@@ -15,7 +15,7 @@ while ballons:
     elif num < 0:
         ballons.rotate(-num)
 
-print(nums)
+print(' '.join(map(str, nums)))
         
         
         
