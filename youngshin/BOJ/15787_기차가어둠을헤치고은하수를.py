@@ -4,7 +4,6 @@ input = sys.stdin.readline
 N, M = map(int, input().split())
 count = 0
 seat = [['x']*20 for i in range(N)]
-print(seat)
 answer = []
 for _ in range(M):
     tmp = ''
@@ -29,3 +28,4 @@ for i in seat:
         count += 1
 print(count)
     
+
