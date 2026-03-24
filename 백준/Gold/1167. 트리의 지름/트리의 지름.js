@@ -16,49 +16,41 @@ for (let i = 1; i <= V; i++) {
   let idx = 1;
   while (true) {
     const v = line[idx++];
-    if (v === -1 || v === undefined) break; // 안전하게 undefined 체크 추가
+    if (v === -1 || v === undefined) break;
     const dist = line[idx++];
 
-    graph[u].push({ to: v, weight: dist }); // i가 아니라 u에 넣어야 함!
+    graph[u].push({ to: v, weight: dist });
   }
 }
 
-function bfs(startNode, V, graph) {
-  const dist = new Array(V + 1).fill(-1); // 거리를 저장할 배열, 인덱스에 해당 노드 방문여부 체크
-  const queue = [];
+function BFS(startNode, V, graph) {
+  let visited = Array(V + 1).fill(false); // 방문 리스트 저장 -1: 미방문, 1: 방문
+  let distance = Array(V + 1).fill(0); // 거리 저장
+  let queue = [startNode]; // 탐색할 노드들을 담는 바구니(Queue)
 
-  queue.push(startNode);
-  dist[startNode] = 0;
+  let u = startNode;
+  visited[startNode] = true; // 시작 노드에 대해서도 방문 처리
 
-  let farthestNode = startNode;
-  let maxDist = 0;
-
-  let head = 0;
-  while (head < queue.length) {
-    const u = queue[head++];
+  // 큐에 노드가 들어있는 동안 계속 반복 (더 이상 갈 곳 없으면 자동 종료)
+  while (queue.length > 0) {
+    let u = queue.shift(); // 현재 노드 꺼내기
 
     for (const edge of graph[u]) {
-      if (dist[edge.to] === -1) {
-        // 방문 안 했으면
-        dist[edge.to] = dist[u] + edge.weight;
-        queue.push(edge.to);
-
-        // 더 먼 노드를 발견하면 갱신
-        if (dist[edge.to] > maxDist) {
-          maxDist = dist[edge.to];
-          farthestNode = edge.to;
-        }
+      if (!visited[edge.to]) {
+        // 미방문 노드라면
+        visited[edge.to] = true;
+        distance[edge.to] = distance[u] + edge.weight; // 현재 노드 거리 + 간선 무게
+        queue.push(edge.to); // 다음 차례를 위해 큐에 넣기
       }
     }
   }
-  return { node: farthestNode, dist: maxDist };
+  let maxDist = Math.max(...distance);
+  let maxNode = distance.indexOf(maxDist);
+
+  return { node: maxNode, dist: maxDist };
 }
 
-// 1. 임의의 노드(1번)에서 가장 먼 노드를 찾습니다.
-const firstResult = bfs(1, V, graph);
+const firstNode = BFS(1, V, graph).node;
+const treeRadial = BFS(firstNode, V, graph).dist;
 
-// 2. 위에서 찾은 '가장 먼 노드'에서 다시 가장 먼 노드를 찾습니다.
-const finalResult = bfs(firstResult.node, V, graph);
-
-// 3. 그것이 바로 트리의 지름입니다.
-console.log(finalResult.dist);
+console.log(treeRadial);
