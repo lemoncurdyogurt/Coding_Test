@@ -1,45 +1,57 @@
-// AC
-"use strict";
 const fs = require("fs");
-const input = fs.readFileSync(0, "utf-8").trim().split(/\s+/);
+const input = fs
+  .readFileSync(process.platform === "linux" ? "/dev/stdin" : "input.txt")
+  .toString()
+  .trim()
+  .split("\n");
 
-let idx = 0;
-const T = Number(input[idx++]); // 테스트 케이스 갯수
-for (let t = 0; t < T; t++) {
-  const P = input[idx++]; // 수행할 함수
-  const n = Number(input[idx++]); // 배열의 수의 갯수
-  let arr = [];
-  arr = JSON.parse(input[idx++]);
-  AC(n, P, arr);
-}
+// R: 배열에 있는 수 뒤집기
+// D: 첫번 째 수 버리기, 빈 배열의 경우 에러
 
-function AC(n, P, arr) {
+const T = input[0]; // 테스트 케이스의 개수
+
+function AC(line, arr, n) {
+  let command = line.split("");
+  let startIdx = 0;
+  let endIdx = n - 1;
   let isReverse = false;
-  let left = 0;
-  let right = n - 1;
 
-  for (const cmd of P) {
-    if (cmd === "R") {
+  // 뒤집혔다면 endIdx있는 곳이 앞쪽 -> D: endIdx--
+  for (let char of command) {
+    if (char === "R") {
       isReverse = !isReverse;
-    } else if (cmd === "D") {
-      if (arr.length === 0 || left > right) {
-        console.log("error");
-        return;
-      } else if (isReverse === false) {
-        left++;
-      } else if (isReverse === true) {
-        right--;
+    } else if (char === "D") {
+      if (startIdx > endIdx) {
+        return "error";
+      }
+
+      if (isReverse) {
+        endIdx--;
+      } else {
+        startIdx++;
       }
     }
   }
-  
-  if (left === right) {
-    arr = arr.slice(left);
+
+  let result = [];
+  if (isReverse) {
+    for (let i = endIdx; i >= startIdx; i--) {
+      result.push(arr[i]);
+    }
   } else {
-    arr = arr.slice(left, right + 1);
-    if (isReverse) {
-      arr.reverse();
+    for (let i = startIdx; i <= endIdx; i++) {
+      result.push(arr[i]);
     }
   }
-  console.log("[" + arr.join(",") + "]");
+
+  return "[" + result.join(",") + "]";
+}
+
+for (let i = 0; i < T; i++) {
+  let p = input[i * 3 + 1];
+  let n = Number(input[i * 3 + 2]);
+  let arr = JSON.parse(input[i * 3 + 3]);
+  // let arr = input[i * 3 + 3].slice(1, -1).split(",").map(Number);
+  // console.log(arr);
+  console.log(AC(p, arr, n));
 }
